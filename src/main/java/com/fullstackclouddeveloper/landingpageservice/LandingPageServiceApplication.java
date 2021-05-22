@@ -3,6 +3,8 @@ package com.fullstackclouddeveloper.landingpageservice;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @RestController
 public class LandingPageServiceApplication {
+    private static final Logger LOGGER = Logger.getLogger(LandingPageServiceApplication.class.getName());
 
     public static void main(String[] args) {
         SpringApplication.run(LandingPageServiceApplication.class, args);
@@ -55,6 +58,7 @@ public class LandingPageServiceApplication {
             throws IOException, InterruptedException, ExecutionException, JsonProcessingException {
         Firestore db = getFirestore();
         String email = body.get("email");
+        LOGGER.info("received email: " + email);
         DocumentReference document = db.collection("emails").document(email);
         ApiFuture<WriteResult> data = document.set(body);
         System.out.println(data.get().getUpdateTime()); 
@@ -65,8 +69,8 @@ public class LandingPageServiceApplication {
     }
 
     private void sendEmail(String email) throws IOException {
-        Email from = new Email("registration@fullstackclouddeveloper.com", "Fullstack Cloud Developer");
-        String subject = "Fullstack cloud developer course registration";
+        Email from = new Email("registration@fullstackclouddeveloper.com", "Full Stack Cloud Developer");
+        String subject = "Full stack cloud developer course registration";
         Email to = new Email(email);
         Content content = new Content("text/plain", "You've been added to the list! We'll notify you when registration begins.");
         Mail mail = new Mail(from, subject, to, content);

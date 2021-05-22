@@ -52,7 +52,7 @@
                 <input name="email" type="email" class="form-control form-control-lg" placeholder="Enter your email...">
               </div>
               <div class="col-12 col-md-3">
-                <button type="submit" class="btn btn-block btn-lg btn-primary">Notify me!</button>
+                <button type="submit" onclick="this.form.button=this;" class="btn btn-block btn-lg btn-primary">Notify me!</button>
               </div>
             </div>
           </form>
@@ -318,7 +318,7 @@
                 <input name="email" type="email" class="form-control form-control-lg" placeholder="Enter your email...">
               </div>
               <div class="col-12 col-md-3">
-                <button type="submit" class="btn btn-block btn-lg btn-primary">Sign up!</button>
+                <button type="submit" onclick="this.form.button=this;" class="btn btn-block btn-lg btn-primary">Sign up!</button>
               </div>
             </div>
           </form>
@@ -374,11 +374,19 @@
     const submit = function(ev) {
       ev.preventDefault();
       const form = ev.currentTarget;
+      form.button.disabled = true;
+
       const email = form.elements['email'].value;
+
+      if (!email) {
+        form.button.disabled = false;
+        return;
+      }
 
       const data = {email: email};
 
       (async() => {
+        
         const response = await fetch(form.action, {
           method: 'POST',
           headers: {
@@ -396,6 +404,8 @@
         } else {
           $('#staticBackdropErr').modal('show');
         }
+
+        form.button.disabled = false;
       })();
     };
 
